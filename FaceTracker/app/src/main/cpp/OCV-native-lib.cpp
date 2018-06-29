@@ -23,14 +23,14 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
 JNIEXPORT void JNICALL
 Java_org_opencv_android_facetracker_HaarDetector_loadResources(JNIEnv *env, jobject instance);
 
-
 inline void vector_Rect_to_Mat(std::vector<Rect>& v_rect, Mat& mat)
 {
     mat = Mat(v_rect, true);
 }
 
 
-CascadeClassifier face_cascade;
+//original--------------------------------
+/*CascadeClassifier face_cascade;
 
 vector<Rect> detect(Mat &gray) {
 
@@ -38,7 +38,38 @@ vector<Rect> detect(Mat &gray) {
     face_cascade.detectMultiScale(gray, faces, 1.1, 3, 0, Size(20, 20), Size(1000, 1000));
 
     return faces;
+}*/
+//--------------------------------------
+
+
+
+//New HAAR detection function to reduce false detection
+CascadeClassifier face_cascade;
+
+std::vector<Rect> detectRF(Mat &gray) {
+
+    double const TH_weight=5.0;//Good empirical threshold values: 5-7
+    std::vector<int> reject_levels;
+    std::vector<double> weights;
+
+    std::vector<Rect> faces = {};
+    std::vector<Rect> realfaces = {};
+    face_cascade.detectMultiScale( gray, faces, reject_levels, weights, 1.1, 5, 0|CV_HAAR_SCALE_IMAGE, Size(), Size(1000,1000), true );
+
+    int i=0;
+    for(vector<Rect>::const_iterator r = faces.begin(); r != faces.end(); r++, i++ ) {
+        LOGI("weights[i]:%f", weights[i]);
+        if (weights[i] >= TH_weight)//Good empirical threshold values: 5-7
+        {
+            //LOGI("weightsACCEPTED[i]:%f", weights[i]);
+            realfaces.push_back(*r);
+        }
+    }
+    LOGI("#realFaces: %i", (int)faces.size());
+    return realfaces;
 }
+
+
 
 
 
@@ -62,17 +93,23 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
 
     vector<Rect> faces;
 
-    Mat &origImg = *((Mat *)inputAddrMat);
+    Mat &origImg = *((Mat *) inputAddrMat);
     Mat mGray;
     cv::cvtColor(origImg, mGray, CV_BGR2GRAY);
 
-    faces = detect (mGray);
+    //faces = detect (mGray);
 
-    for (int i = 0; i < faces.size(); i++)
-        rectangle(origImg, Point(faces[i].x,faces[i].y),
-                           Point(faces[i].x+faces[i].width,faces[i].y+faces[i].height),
-                           Scalar(255, 255, 255), 3);
+    /* for (int i = 0; i < faces.size(); i++)
+         rectangle(origImg, Point(faces[i].x,faces[i].y),
+                            Point(faces[i].x+faces[i].width,faces[i].y+faces[i].height),
+                            Scalar(255, 255, 255), 3);*/
 
+    faces = detectRF(mGray);
+    for (int i = 0; i < faces.size(); i++) {
+    rectangle(origImg, faces[i], Scalar(255, 255, 0), 4, 8, 0);
+    }
+
+    //vector_Rect_to_Mat(faces, *((Mat*)matRects));
     vector_Rect_to_Mat(faces, *((Mat*)matRects));
 }
 }
