@@ -38,3 +38,7 @@ export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
 
 5. OpenCV disabled for now
 
+6. To enable openALPR activities: 
+  * download jni libs from [this link](https://drive.google.com/open?id=13ZlJvIRBpxydJcm64tS_czQm3e0SBwVu). The folder contains precompiled libs for `ANDROID_PLATFORM="android-21"` and `ANDROID_ABI="armeabi-v7a", "arm64-v8a", "x86_64"`. For compling with another `ANDROID_PLATFORM` or `ANDROID_ABI` use [this script](https://gist.github.com/jav974/072425f14927e6ca2c7a4439d8ac5457).
+
+  * change `LIBS_DIR` path to downloaded folder in `app/jni/openalpr_jni/CMakeLists.txt`

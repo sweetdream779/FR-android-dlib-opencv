@@ -84,13 +84,29 @@ public class OpenALPRDetector {
       LOGGER.d("Image Size: " + results.getImgWidth() + "x" + results.getImgHeight());
       LOGGER.d("Processing Time: " + results.getTotalProcessingTimeMs() + " ms");
       LOGGER.d("Found " + results.getPlates().size() + " results");
-      LOGGER.d("Found " + results.getRegionsOfInterest().size() + " rois");
 
       LOGGER.d("  %-15s%-8s\n", "Plate Number", "Confidence");
       int i = 0;
-      List<AlprRegionOfInterest> rois = results.getRegionsOfInterest();
+      //List<AlprRegionOfInterest> rois = results.getRegionsOfInterest();
+
+      /*List<AlprRegionOfInterest> plateRegions = results.getPlateRegions();
+      for(AlprRegionOfInterest plateRegion : plateRegions)
+      {
+        final RectF detection =
+                new RectF(
+                        plateRegion.getX(),
+                        plateRegion.getY(),
+                        plateRegion.getX() + plateRegion.getWidth(),
+                        plateRegion.getY() + plateRegion.getHeight());
+        Recognition recognition = new Recognition("" + i, "", .6f, detection);
+        recognitions.add(recognition);
+        LOGGER.d("===PlateRegion: %d, %d, %d, %d\n", plateRegion.getX(), plateRegion.getY(), plateRegion.getWidth(), plateRegion.getHeight());
+      }*/
+
+
       /*if(results.getPlates().size() == 0)
         resultLine = resultLine + " Nothing was found.";*/
+
       for (AlprPlateResult result : results.getPlates())
         {
             AlprPlate bestPlate = result.getBestPlate();
@@ -109,7 +125,7 @@ public class OpenALPRDetector {
             recognitions.add(recognition);
             LOGGER.d("%-15s%-2f\n", bestPlate.getCharacters(), bestPlate.getOverallConfidence());
             //resultLine = resultLine + " Found : " + bestPlate.getCharacters();
-            LOGGER.d("Roi: %d, %d, %d, %d\n", rois.get(i).getX(), rois.get(i).getY(), rois.get(i).getWidth(), rois.get(i).getHeight());
+            //LOGGER.d("Roi: %d, %d, %d, %d\n", rois.get(i).getX(), rois.get(i).getY(), rois.get(i).getWidth(), rois.get(i).getHeight());
             i += 1;
         }
     }catch (final Exception e) {

@@ -16,6 +16,7 @@ public class AlprResults {
     private List<AlprPlateResult> plates;
 
     private List<AlprRegionOfInterest> regionsOfInterest;
+    private List<AlprRegionOfInterest> plateRegions;
 
     AlprResults(String json) throws JSONException
     {
@@ -43,6 +44,16 @@ public class AlprResults {
             AlprRegionOfInterest roi = new AlprRegionOfInterest(roiObj);
             regionsOfInterest.add(roi);
         }
+
+        //!!added
+        //JSONArray regionsArray = jobj.getJSONArray("plate_regions");
+        //plateRegions = new ArrayList<AlprRegionOfInterest>(regionsArray.length());
+        //for (int i = 0; i < regionsArray.length(); i++)
+        //{
+        //    JSONObject roiObj = (JSONObject) regionsArray.get(i);
+        //    AlprRegionOfInterest roi = new AlprRegionOfInterest(roiObj);
+        //    plateRegions.add(roi);
+        //}
     }
 
     public long getEpochTime() {
@@ -68,4 +79,8 @@ public class AlprResults {
     public List<AlprRegionOfInterest> getRegionsOfInterest() {
         return regionsOfInterest;
     }
+
+    //public List<AlprRegionOfInterest> getPlateRegions() {
+        //return plateRegions;
+    //}
 }

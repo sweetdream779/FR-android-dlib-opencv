@@ -79,7 +79,7 @@ import org.opencv.android.facetracker.OpenCvActivity;
 public class CameraActivityMainALPRus extends Activity
     implements OnImageAvailableListener, Camera.PreviewCallback {
 
-  private static final float MINIMUM_CONFIDENCE = 0.5f;
+  private static final float MINIMUM_CONFIDENCE = 0.3f;
   static final String RUNTIME_DATA_DIR_ASSET = "runtime_data";
   static final String ANDROID_DATA_DIR = "/data/data/com.google.android.gms.samples.vision.face.facetracker";
   static final String OPENALPR_CONF_FILE = "openalpr.defaults.conf";

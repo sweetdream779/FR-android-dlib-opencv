@@ -15,15 +15,15 @@ public class Alpr {
     private native void initialize(String country, String configFile, String runtimeDir);
     private native void dispose();
 
-    private native boolean isloaded();
-    private native String nativeRecognize(String imageFile);
-    private native String nativeRecognize(byte[] imageBytes);
-    private native String nativeRecognize(long imageData, int bytesPerPixel, int imgWidth, int imgHeight);
+    private native boolean is_loaded();
+    private native String native_recognize(String imageFile);
+    private native String native_recognize(byte[] imageBytes);
+    private native String native_recognize(long imageData, int bytesPerPixel, int imgWidth, int imgHeight);
 
-    private native void setdefaultregion(String region);
-    private native void detectregion(boolean detectRegion);
-    private native void settopn(int topN);
-    private native String getversion();
+    private native void set_default_region(String region);
+    private native void detect_region(boolean detectRegion);
+    private native void set_top_n(int topN);
+    private native String get_version();
 
 
 
@@ -39,13 +39,13 @@ public class Alpr {
 
     public boolean isLoaded()
     {
-        return isloaded();
+        return is_loaded();
     }
 
     public AlprResults recognize(String imageFile) throws AlprException
     {
         try {
-            String json = nativeRecognize(imageFile);
+            String json = native_recognize(imageFile);
             LOGGER.d("====================Recieve results");
             return new AlprResults(json);
         } catch (JSONException e)
@@ -58,7 +58,7 @@ public class Alpr {
     public AlprResults recognize(byte[] imageBytes) throws AlprException
     {
         try {
-            String json = nativeRecognize(imageBytes);
+            String json = native_recognize(imageBytes);
             return new AlprResults(json);
         } catch (JSONException e)
         {
@@ -70,7 +70,7 @@ public class Alpr {
     public AlprResults recognize(long imageData, int bytesPerPixel, int imgWidth, int imgHeight) throws AlprException
     {
         try {
-            String json = nativeRecognize(imageData, bytesPerPixel, imgWidth, imgHeight);
+            String json = native_recognize(imageData, bytesPerPixel, imgWidth, imgHeight);
             return new AlprResults(json);
         } catch (JSONException e)
         {
@@ -81,21 +81,21 @@ public class Alpr {
 
     public void setTopN(int topN)
     {
-        settopn(topN);
+        set_top_n(topN);
     }
 
     public void setDefaultRegion(String region)
     {
-        setdefaultregion(region);
+        set_default_region(region);
     }
 
     public void setDetectRegion(boolean detectRegion)
     {
-        detectregion(detectRegion);
+        detect_region(detectRegion);
     }
 
     public String getVersion()
     {
-        return getversion();
+        return get_version();
     }
 }

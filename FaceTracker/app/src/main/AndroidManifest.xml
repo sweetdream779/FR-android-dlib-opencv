@@ -32,7 +32,6 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="face" />
 
-
         <activity
             android:name="tensorflow.detector.spc.CameraActivityMainALPReu"
             android:icon="@drawable/icon"
