@@ -14,15 +14,14 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 19 // AL 21 ==> 15
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         externalNativeBuild {
             cmake {
                 cppFlags "-frtti -fexceptions -std=c++11"
-                // abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'                
                 arguments "-DANDROID_STL=gnustl_shared"
             }
         }
@@ -33,15 +32,8 @@ android {
         // Specifies the fully-qualified class name of the test instrumentation runner.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-    }
 
-//    sourceSets { // AL: added
-//        main {
-//            jniLibs.srcDirs = ['src/main/jniLibs']
-//            jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/']
-//            //jni.srcDirs = []
-//        }
-//    }
+    }
 
 
     buildTypes {
@@ -70,8 +62,7 @@ android {
         abortOnError false
     }
 
-    sourceSets {
-        main { jniLibs.srcDirs = ['src/main/jni', 'src/main/jniLibs/'] }
+    sourceSets {        
         androidTest {  // AL (
             java.srcDir file('src/androidTest/java')
             resources.srcDir file('src/androidTest/assets')
