@@ -29,8 +29,7 @@ inline void vector_Rect_to_Mat(std::vector<Rect>& v_rect, Mat& mat)
 }
 
 
-//original--------------------------------
-/*CascadeClassifier face_cascade;
+CascadeClassifier face_cascade;
 
 vector<Rect> detect(Mat &gray) {
 
@@ -38,14 +37,10 @@ vector<Rect> detect(Mat &gray) {
     face_cascade.detectMultiScale(gray, faces, 1.1, 3, 0, Size(20, 20), Size(1000, 1000));
 
     return faces;
-}*/
-//--------------------------------------
-
+}
 
 
 //New HAAR detection function to reduce false detection
-CascadeClassifier face_cascade;
-
 std::vector<Rect> detectRF(Mat &gray) {
 
     double const TH_weight=5.0;//Good empirical threshold values: 5-7
@@ -68,9 +63,6 @@ std::vector<Rect> detectRF(Mat &gray) {
     LOGI("#realFaces: %i", (int)faces.size());
     return realfaces;
 }
-
-
-
 
 
 JNIEXPORT void JNICALL
