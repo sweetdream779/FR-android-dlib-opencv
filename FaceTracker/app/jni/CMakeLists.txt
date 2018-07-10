@@ -55,4 +55,4 @@ target_link_libraries(tensorflow_detector
                       atomic
                       z)
 
-add_subdirectory("./openalpr_jni")
+#add_subdirectory("./openalpr_jni")
