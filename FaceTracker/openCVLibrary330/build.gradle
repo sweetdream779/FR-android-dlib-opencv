@@ -19,4 +19,5 @@ android {
     lintOptions {
         abortOnError false
     }
+    sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/'] } }
 }

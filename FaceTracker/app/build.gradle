@@ -62,7 +62,12 @@ android {
         abortOnError false
     }
 
-    sourceSets {        
+    sourceSets {
+        main {
+            jniLibs.srcDirs = [
+                    'src/main/jniLibs']
+            resources.srcDirs=[
+                    'src/main/resources', 'src/main/res/raw']}
         androidTest {  // AL (
             java.srcDir file('src/androidTest/java')
             resources.srcDir file('src/androidTest/assets')

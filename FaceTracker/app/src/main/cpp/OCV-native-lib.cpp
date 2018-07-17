@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <android/log.h>
+#include <math.h>
 
 using namespace std;
 using namespace cv;
@@ -11,7 +12,7 @@ using namespace cv;
 #define  LOG_TAG    "OCV-Native"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-
+#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__))
 
 extern "C"
 {
@@ -79,6 +80,7 @@ Java_org_opencv_android_facetracker_HaarDetector_loadResources(JNIEnv *env, jobj
 }
 
 
+
 JNIEXPORT void JNICALL
 Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jclass instance,
                                                                 jlong inputAddrMat, jlong matRects) {
@@ -89,19 +91,14 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
     Mat mGray;
     cv::cvtColor(origImg, mGray, CV_BGR2GRAY);
 
-    //faces = detect (mGray);
-
-    /* for (int i = 0; i < faces.size(); i++)
-         rectangle(origImg, Point(faces[i].x,faces[i].y),
-                            Point(faces[i].x+faces[i].width,faces[i].y+faces[i].height),
-                            Scalar(255, 255, 255), 3);*/
-
     faces = detectRF(mGray);
     for (int i = 0; i < faces.size(); i++) {
-    rectangle(origImg, faces[i], Scalar(255, 255, 0), 4, 8, 0);
+        rectangle(origImg, faces[i], Scalar(255, 255, 0), 4, 8, 0);
     }
 
     //vector_Rect_to_Mat(faces, *((Mat*)matRects));
-    vector_Rect_to_Mat(faces, *((Mat*)matRects));
+  ////  vector_Rect_to_Mat(faces, *((Mat*)matRects));
+    *((Mat*)matRects) = Mat(faces, true);
 }
+
 }
