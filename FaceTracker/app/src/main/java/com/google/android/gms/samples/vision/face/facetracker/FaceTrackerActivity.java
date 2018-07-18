@@ -237,8 +237,8 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mBtnDetect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent myIntent = new Intent(FaceTrackerActivity.this, OpenCvActivity.class);
-                Intent myIntent = new Intent(FaceTrackerActivity.this, FdActivity.class);
+                Intent myIntent = new Intent(FaceTrackerActivity.this, OpenCvActivity.class);
+                //Intent myIntent = new Intent(FaceTrackerActivity.this, FdActivity.class);
                 FaceTrackerActivity.this.startActivity(myIntent);
             }
         });
