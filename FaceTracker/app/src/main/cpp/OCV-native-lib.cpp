@@ -23,6 +23,10 @@ JNIEXPORT void JNICALL
 Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jclass instance,
                                                                 jlong inputAddrMat, jlong matRects);
 
+/*JNIEXPORT void JNICALL
+Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jclass instance,
+                                                                jlong inputAddrMat);*/
+
 JNIEXPORT void JNICALL
 Java_org_opencv_android_facetracker_HaarDetector_loadResources(JNIEnv *env, jobject instance);
 
@@ -51,25 +55,40 @@ struct byArea {
 //New HAAR detection function to reduce false detection
 std::vector<Rect> detectRF(Mat &gray) {
 
-        double const TH_weight=5.0;//Good empirical threshold values: 5-7
+    //new part----------------------------------------
+    Mat img_hsv,s_img;
+    cvtColor(gray,img_hsv,CV_RGB2HSV);
+    std::vector<cv::Mat> channels;
+    cv::split(img_hsv, channels);//[0] = H;[1] = S;[2] = V;
+    s_img=channels[2];//value channel: 2
+    //end new part------------------------------------
+
+    double const TH_weight=4.0;//Good empirical threshold values: 5-7 (INDOOR) - 4.0 (outdoor)
+                               //NOTE: The detection range depends on this threshold value.
+                               //      By reducing this value, you increase the possibility
+                               //      to detect a smaller face even at a longer distance,
+                               // but also to have false detections.
     std::vector<int> reject_levels;
     std::vector<double> weights;
 
     std::vector<Rect> faces = {};
     std::vector<Rect> realfaces = {};
-    face_cascade.detectMultiScale( gray, faces, reject_levels, weights, 1.1, 5, 0|CV_HAAR_SCALE_IMAGE, Size(), Size(1000,1000), true );
-
+    //face_cascade.detectMultiScale( gray, faces, reject_levels, weights, 1.1, 5, 0|CV_HAAR_SCALE_IMAGE, Size(), Size(1000,1000), true );
+    face_cascade.detectMultiScale(s_img, faces, reject_levels, weights, 1.1, 5, 0|CV_HAAR_SCALE_IMAGE, Size(), Size(1000,1000), true );
     int i=0;
     for(vector<Rect>::const_iterator r = faces.begin(); r != faces.end(); r++, i++ ) {
-        LOGI("weights[i]:%f", weights[i]);
+        LOGI("weights[%i]:%f, sizeFace[i]: %i", i, weights[i], faces[i].width);
         if (weights[i] >= TH_weight)//Good empirical threshold values: 5-7
         {
             //LOGI("weightsACCEPTED[i]:%f", weights[i]);
             realfaces.push_back(*r);
+            //for debugging
+            rectangle(gray, realfaces[i], Scalar(255, 255, 0), 2, 8, 0);//4, 8, 0
         }
     }
     LOGI("#realFaces: %i (TH_weight= %.2f)", (int)faces.size(), TH_weight);
     sort( realfaces.begin(), realfaces.end(), byArea() );
+
 
     return realfaces;
 }
@@ -169,13 +188,15 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
       Mat &origImg = *((Mat *) inputAddrMat);
       Mat mGray;
       cv::cvtColor(origImg, mGray, CV_BGR2GRAY);
-      vector<Rect> BBfaces, oldFaces;
+      vector<Rect> BBfaces, oldFaces, tfaces;
 
       int currNumFaces=0;
       int oldNumFaces=0;
-      BBfaces = detectRF(mGray);//new_version
+      ////BBfaces = detectRF(mGray);//new_version
+      BBfaces = detectRF(origImg);//new_version with HSV conversion
+
     /*  for (int i = 0; i < BBfaces.size(); i++) {
-          rectangle(origImg, BBfaces[i], Scalar(255, 255, 0), 4, 8, 0);
+          rectangle(origImg, BBfaces[i], Scalar(255, 255, 0), 2, 8, 0);//4, 8, 0
       }*/
 
       //Face tracking
@@ -191,6 +212,7 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
                   algorithms.push_back(createTrackerByName(trackingAlg));//trackers creation
                   trackedFaces.push_back(BBfaces[i]);
                   LOGI("#trackedFaces:%i", (int)trackedFaces.size());
+                  tfaces.push_back(trackedFaces.at(i));//new part
 
                   //create faces history
                   oldFaces.push_back(BBfaces.at(i));//create history faces
@@ -221,6 +243,7 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
                           //Tracker initialization
                           algorithms.push_back(createTrackerByName(trackingAlg));//trackers creation
                           newTrackedFaces.push_back(BBfaces[BBfaces.size()-1-i]);//add last detected faces
+                          tfaces.push_back(newTrackedFaces.at(i));//new part
                       } // end for
                       trackers.add(algorithms,origImg,newTrackedFaces);
 
@@ -245,13 +268,15 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
                   //Draw the Bounding Boxes of the tracked faces
                   if(updateOK)
                   {
+                      //new part-----------------------------
+                      for (size_t i = 0; i < trackers.getObjects().size(); i++) {
+                          tfaces.push_back(trackers.getObjects().at(i));
+                      }
+                      //end new part-------------------------------
                       LOGI("updateOK: %i -> DrawTrackedFaces",(int)updateOK);
-                      cv::Scalar blue=cv::Scalar(0,0,255) ;
-                      DrawTrackedOBJ(trackers,origImg, blue);
+                     /* cv::Scalar blue=cv::Scalar(0,0,255) ;
+                      DrawTrackedOBJ(trackers,origImg, blue);*/
                   }
-                /*  else{LOGI("updateOK: %i -> DrawTrackedFaces also if updateOK==0",(int)updateOK);
-                      cv::Scalar blue=cv::Scalar(0,0,255) ;
-                      DrawTrackedOBJ(trackers,origImg, blue);}*/
                   else
                   {
                       LOGI(" if(updateOK==0), #algorithms: %i", (int)algorithms.size());
@@ -283,8 +308,13 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
               updateOK=trackers.update(origImg);
               if(updateOK)
               {
-                  cv::Scalar blue=cv::Scalar(255,0,0) ;
-                  DrawTrackedOBJ(trackers, origImg, blue);
+                  /*cv::Scalar blue=cv::Scalar(255,0,0) ;
+                  DrawTrackedOBJ(trackers, origImg, blue);*/
+                  //new part-----------------------------
+                  for (size_t i = 0; i < trackers.getObjects().size(); i++) {
+                      tfaces.push_back(trackers.getObjects().at(i));
+                  }
+                  //end new part-------------------------------
               }
               else
               {
@@ -297,7 +327,9 @@ Java_org_opencv_android_facetracker_HaarDetector_OpenCVdetector(JNIEnv *env, jcl
           }
       }
     //--------------------------------------------
-    *((Mat*)matRects) = Mat(BBfaces, true);
+////    *((Mat*)matRects) = Mat(BBfaces, true);
+
+    *((Mat*)matRects) = Mat(tfaces, true);
 }
 
 

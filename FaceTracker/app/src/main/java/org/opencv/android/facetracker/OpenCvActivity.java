@@ -38,8 +38,8 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
 
     private static final String TAG = "OCV-Activity";
     //private static final Scalar DETECT_BOX_COLOR   = new Scalar(255, 255, 255, 255);
-    private static final Scalar DETECT_BOX_COLOR   = new Scalar(255, 255, 0, 255);//yellow
-    //private static final Scalar TRACKER_BOX_COLOR   = new Scalar(255, 0, 0, 255);//blue
+    //private static final Scalar DETECT_BOX_COLOR   = new Scalar(255, 255, 0, 255);//yellow
+    private static final Scalar TRACKER_BOX_COLOR   = new Scalar(0, 0, 255, 255);//blue
     private Mat mRgba;
     private Mat mGray;
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -185,11 +185,16 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
         MatOfRect faces = new MatOfRect();
 
         hd.OCvDetect(mRgba, faces);
+
         //mJavaDetector.detectMultiScale(mGray, faces, 1.1, 3, 0,new Size(10,10), new Size());
 
     /*    Rect[] facesArray = faces.toArray();
         for (int i = 0; i < facesArray.length; i++)
             Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), DETECT_BOX_COLOR, 3);*/
+
+        Rect[] facesArray = faces.toArray();
+        for (int i = 0; i < facesArray.length; i++)
+            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), TRACKER_BOX_COLOR, 3);
 
         return mRgba;
     }
