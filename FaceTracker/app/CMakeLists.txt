@@ -77,9 +77,6 @@ add_library( # Sets the name of the library.
              # Associated headers in the same location as their source
              # file are automatically included.
                src/main/cpp/OCV-native-lib.cpp
-               src/main/cpp/tracking/multiTracker_alt.cpp
-               src/main/cpp/tracking/trackerMedianFlow.cpp
-               src/main/cpp/tracking/opencl_kernels_tracking.cpp
              )
 
 target_link_libraries(

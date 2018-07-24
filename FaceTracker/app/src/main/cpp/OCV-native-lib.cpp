@@ -4,7 +4,7 @@
 
 #include <android/log.h>
 #include <math.h>
-#include "tracking/tracker.hpp" //MLtracker
+#include <opencv2/tracking/tracker.hpp> //MEDIANFLOW tracker
 
 
 using namespace std;
