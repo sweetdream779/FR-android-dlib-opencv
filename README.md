@@ -34,7 +34,12 @@ export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
 
   private static final int TF_OD_API_INPUT_SIZE = 416;
   
-  private static final String TF_OD_API_MODEL_FILE ="file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb"
+  private static final String TF_OD_API_MODEL_FILE ="file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb" 
 
-5. OpenCV disabled for now
+5. To run "OCV-FTD":
+   a) download "OpenCV 3.4.0dev Android SDK with contrib modules" from the following link:
+      https://github.com/chaoyangnz/opencv3-android-sdk-with-contrib
+   b) create "jniLibs" folder into following path: "FaceTracker/app/src/main"
+   c) copy the pre-compiled libraries from OpenCV-android-sdk/sdk/native/libs into the newly created jniLibs folder
+   d) copy "haarcascade_frontalface_default.xml" into "sdcard/Download"
 

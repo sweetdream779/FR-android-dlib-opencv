@@ -6,6 +6,11 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.content.Intent;
+import android.util.SparseArray;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -25,20 +31,25 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.samples.vision.face.facetracker.R;
 import com.google.android.gms.samples.vision.face.facetracker.FaceTrackerActivity;
-
+import com.google.android.gms.vision.face.Face;
 
 
 public class OpenCvActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private static final String TAG = "OCV-Activity";
+    //private static final Scalar DETECT_BOX_COLOR   = new Scalar(255, 255, 255, 255);
+    //private static final Scalar DETECT_BOX_COLOR   = new Scalar(255, 255, 0, 255);//yellow
+    private static final Scalar TRACKER_BOX_COLOR   = new Scalar(0, 0, 255, 255);//blue
     private Mat mRgba;
+    private Mat mGray;
     private CameraBridgeViewBase mOpenCvCameraView;
-    private RelativeLayout mRelativeLayout;
-    private Camera mCamera;
+    private RelativeLayout       mRelativeLayout;
+    private Camera               mCamera;
+    private CascadeClassifier    mJavaDetector;
     HaarDetector hd = new HaarDetector();
     Button mBtnSwitch;
     int cameraId = -1;
-
+   
 
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -50,6 +61,14 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
                     Log.d(TAG, "OpenCV loaded successfully");
                     // Load native library after(!) OpenCV initialization
                     hd.loadNative();
+
+                    mJavaDetector = new CascadeClassifier("/sdcard/Download/haarcascade_frontalface_default.xml");
+                    if (mJavaDetector.empty()) {
+                        Log.e(TAG, "Failed to load Java cascade classifier ");
+                        mJavaDetector = null;
+                    } else
+                        Log.i(TAG, "Loaded Java cascade classifier!!! " );
+
                     mOpenCvCameraView.enableView();
                 }
                 break;
@@ -85,9 +104,8 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
                 new String[]{Manifest.permission.CAMERA},
                 1);
         */
-        mRelativeLayout = (RelativeLayout)findViewById(R.id.OCVtopLayout);
+        // mRelativeLayout = (RelativeLayout)findViewById(R.id.OCVtopLayout);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.main_surface);
-
         // what are the following used for?
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         //mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -123,11 +141,13 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
 
     public void onCameraViewStarted(int width, int height) {
         mRgba = new Mat();
+        mGray = new Mat();
     }
 
 
     public void onCameraViewStopped() {
         mRgba.release();
+        mGray.release();
     }
 
     @Override
@@ -160,11 +180,21 @@ public class OpenCvActivity extends AppCompatActivity implements CameraBridgeVie
         Log.d(TAG, "called onCameraFrame");
 
         mRgba = inputFrame.rgba();
+        mGray = inputFrame.gray();
+
         MatOfRect faces = new MatOfRect();
 
-        mRgba = inputFrame.rgba();
+        hd.OCvDetect(mRgba, faces);
 
-        hd.OCvDetect(mRgba.getNativeObjAddr(), faces.getNativeObjAddr());
+        //mJavaDetector.detectMultiScale(mGray, faces, 1.1, 3, 0,new Size(10,10), new Size());
+
+    /*    Rect[] facesArray = faces.toArray();
+        for (int i = 0; i < facesArray.length; i++)
+            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), DETECT_BOX_COLOR, 3);*/
+
+        Rect[] facesArray = faces.toArray();
+        for (int i = 0; i < facesArray.length; i++)
+            Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), TRACKER_BOX_COLOR, 3);
 
         return mRgba;
     }
