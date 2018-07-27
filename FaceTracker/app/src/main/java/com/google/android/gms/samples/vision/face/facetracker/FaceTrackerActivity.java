@@ -30,8 +30,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -52,19 +57,32 @@ import dlib.android.FaceRecognizer;
 import tensorflow.detector.spc.CameraActivityMain;
 import opencv.android.fdt.FdActivity;
 
+class DoneOnEditorActionListener implements TextView.OnEditorActionListener {
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            v.setVisibility(View.INVISIBLE);
+            return true;
+        }
+        return false;
+    }
+}
 /**
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
  * overlay graphics to indicate the position, size, and ID of each face.
  */
 public final class FaceTrackerActivity extends AppCompatActivity {
-    private static final String TAG = "FR";
+    private static final String TAG = "FaceTrackerActivity";
 
     private CameraSource mCameraSource = null;
 
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
-    private Button mBtnDetect;
+    private Button mBtnDetect, btnTraining;
     private CustomDetector customDetector;
+    private EditText mTxtTrainingName;
     //private FaceDetector mPictureDetector;
 
     private static final int RC_HANDLE_GMS = 9001;
@@ -93,6 +111,9 @@ public final class FaceTrackerActivity extends AppCompatActivity {
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
         mBtnDetect = (Button) findViewById(R.id.btnDetect);
+        btnTraining = (Button) findViewById(R.id.btnTraining);
+        mTxtTrainingName = (EditText) findViewById(R.id.txtTrainingName);
+        mTxtTrainingName.setOnEditorActionListener(new DoneOnEditorActionListener());
         mFaceRecognizer = new FaceRecognizer();
 
         // Check for the camera permission before accessing the camera.  If the
@@ -240,6 +261,19 @@ public final class FaceTrackerActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(FaceTrackerActivity.this, OpenCvActivity.class);
                 //Intent myIntent = new Intent(FaceTrackerActivity.this, FdActivity.class);
                 FaceTrackerActivity.this.startActivity(myIntent);
+            }
+        });
+
+        btnTraining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w(TAG, "TBD");
+                mTxtTrainingName.setVisibility(View.VISIBLE);
+                mTxtTrainingName.requestFocus();
+
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
 

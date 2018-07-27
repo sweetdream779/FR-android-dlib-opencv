@@ -16,6 +16,16 @@
       android:layout_alignParentRight="true"
       android:drawableRight="@drawable/objects" />
 
+  <Button
+      android:id="@+id/btnTraining"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentLeft="true"
+      android:drawableRight="@drawable/training"
+      />
+
   <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
       android:id="@+id/preview"
       android:layout_width="match_parent"
