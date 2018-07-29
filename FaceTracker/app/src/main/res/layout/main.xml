@@ -30,16 +30,6 @@
         android:drawableRight="@drawable/training"
         />
 
-    <Button
-        android:id="@+id/btnMakePhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:drawableRight="@drawable/make_photo"
-        android:visibility="invisible"
-        />
 
     <com.google.android.gms.samples.vision.face.facetracker.ui.camera.CameraSourcePreview
       android:id="@+id/preview"
@@ -69,15 +59,16 @@
     <TextView
         android:id="@+id/lblTraining"
         android:layout_width="wrap_content"
-        android:layout_height="65dp"
-        android:layout_above="@+id/btnDetect"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:ems="10"
+        android:ems="15"
         android:inputType="textMultiLine"
-        android:lines="3"
+        android:maxLines="5"
         android:singleLine="false"
-        android:text="Please type person name and make several photos. We will add suffix automatically"
+        android:text="To save the face vector, please point the camera at the person and enter his name and press OK"
         android:textColor="@android:color/holo_blue_bright"
-        android:textSize="18sp" />
+        android:textSize="14sp"
+        android:visibility="invisible"/>
 
 </RelativeLayout>
