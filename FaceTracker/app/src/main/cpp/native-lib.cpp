@@ -14,7 +14,7 @@
 using namespace std;
 using namespace dlib;
 
-#define  LOG_TAG    "Native"
+#define  LOG_TAG    "dlib-native"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
@@ -263,7 +263,7 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
     //dlib::save_bmp(img, "/sdcard/Download/res.bmp");
 
     std::vector<dlib::rectangle> dets = detector(img);
-    LOGI("detected size %d", dets.size());
+    //LOGI("detected size %d", dets.size());
 
     float min_dist = 0.0;
     if(dets.size() > 0  ){
@@ -306,4 +306,87 @@ Java_dlib_android_FaceRecognizer_recognizeFace(JNIEnv *env, jobject instance, jo
 
     std::string returnValue = "Unknown";
     return env->NewStringUTF(returnValue.c_str());
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_dlib_android_FaceRecognizer_saveFace(JNIEnv *env, jobject instance, jstring name_,
+                                          jobject bmp) {
+    const char *name = env->GetStringUTFChars(name_, 0);
+
+    AndroidBitmapInfo infocolor;
+    void *pixelscolor;
+    int y;
+    int x;
+    int ret;
+    array2d<rgb_pixel> img;
+    if ((ret = AndroidBitmap_getInfo(env, bmp, &infocolor)) < 0) {
+        LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return 1000;
+    }
+    LOGI("color image :: width is %d; height is %d; stride is %d; format is %d;flags is %d",
+         infocolor.width, infocolor.height, infocolor.stride, infocolor.format, infocolor.flags);
+
+    if (infocolor.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap format is not RGBA_8888 !");
+        return 1001;
+    }
+
+    if ((ret = AndroidBitmap_lockPixels(env, bmp, &pixelscolor)) < 0) {
+        LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
+        return 1002;
+    }
+
+    img.set_size(infocolor.height, infocolor.width);
+    for (y = 0; y < infocolor.height; y++) { //todo: performance
+        argb *line = (argb *) pixelscolor;
+        for (x = 0; x < infocolor.width; ++x) {
+            rgb_pixel p(line[x].alpha, line[x].red, line[x].green);
+            img[y][x] = p;
+        }
+        pixelscolor = (char *) pixelscolor + infocolor.stride;
+    }
+
+    std::vector<dlib::rectangle> dets = detector1(img);
+
+    if(dets.size() > 0 ) {
+        auto face = dets.front();
+        std::vector<matrix<rgb_pixel>> faces;
+        int x = face.left();
+        int y = face.top();
+        int width = face.width();
+        int height = face.height();
+
+        auto shape = sp(img, face);
+        matrix<rgb_pixel> face_chip;
+        extract_image_chip(img, get_face_chip_details(shape, 150, 0.25), face_chip);
+        faces.push_back(move(face_chip));
+        std::vector<matrix<float, 0, 1>> face_descriptors = net1(faces);
+
+        if (face_descriptors.size() > 0) {
+            matrix<float, 0, 1> face_desc = face_descriptors[0];
+
+            std::vector<std::string> names;
+            int cx = 0;
+            for(auto kv : known_faces) {
+                if(0 == kv.first.find(name)) {
+                    cx++;
+                }
+            }
+
+            std:string person_name = std::string(name) + "_" + std::to_string(cx);
+            known_faces.insert({person_name, face_desc});
+            std::string filename = "/sdcard/Download/" + person_name + ".vec";
+            dlib::serialize(filename) << face_desc;
+        }
+    }else {
+        LOGI("face Not detected");
+        return 1;
+    }
+
+    LOGI("unlocking pixels");
+    AndroidBitmap_unlockPixels(env, bmp);
+
+    env->ReleaseStringUTFChars(name_, name);
+    return 0;
 }
