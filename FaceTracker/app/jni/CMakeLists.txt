@@ -47,6 +47,11 @@ add_library(tensorflow_detector SHARED
 target_include_directories(tensorflow_detector PRIVATE
                            ${CMAKE_SOURCE_DIR})
 
+add_custom_command(TARGET tensorflow_detector POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "/home/irina/FR_master/jniLibs"
+        ${CMAKE_SOURCE_DIR}/src/main/jniLibs)
+
 target_link_libraries(tensorflow_detector
                       android
                       log
@@ -54,5 +59,3 @@ target_link_libraries(tensorflow_detector
                       m
                       atomic
                       z)
-
-#add_subdirectory("./openalpr_jni")

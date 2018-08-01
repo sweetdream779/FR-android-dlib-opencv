@@ -6,6 +6,7 @@ local.properties
 .DS_Store
 captures/
 *.a
+*.so
 FaceTracker/app/.externalNativeBuild/
 *.pb
 FaceTracker/app/build/
