@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 // Output directory in the local directory for packaging into the APK.
 
 android {
@@ -15,7 +14,7 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.google.android.gms.samples.vision.face.facetracker"
-        minSdkVersion 21 // AL 21 ==> 15
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -28,21 +27,14 @@ android {
         }
         signingConfig signingConfigs.config
 
-
         // Specifies the application ID for the test APK.
         testApplicationId "org.opencv.android.facetracker"
         // Specifies the fully-qualified class name of the test instrumentation runner.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+
     }
 
-//    sourceSets { // AL: added
-//        main {
-//            jniLibs.srcDirs = ['src/main/jniLibs']
-//            jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/']
-//            //jni.srcDirs = []
-//        }
-//    }
 
     buildTypes {
         release {
@@ -64,17 +56,23 @@ android {
             path "CMakeLists.txt"
         }
     }
-    productFlavors {}
+    productFlavors {
+    }
     lintOptions {
         abortOnError false
     }
 
-    sourceSets {main {jniLibs.srcDirs=['src/main/jni', 'src/main/jniLibs/'] }
-                androidTest {  // AL (
-                    java.srcDir file('src/androidTest/java')
-                    resources.srcDir file('src/androidTest/assets')
-                } // AL )
-}
+    sourceSets {
+        main {
+            jniLibs.srcDirs = [
+                    'src/main/jniLibs']
+            resources.srcDirs=[
+                    'src/main/resources', 'src/main/res/raw']}
+        androidTest {  // AL (
+            java.srcDir file('src/androidTest/java')
+            resources.srcDir file('src/androidTest/assets')
+        } // AL )
+    }
 
     configurations.all {
         resolutionStrategy.force 'com.android.support:support-annotations:23.4.0'
@@ -83,6 +81,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     androidTestImplementation 'junit:junit:4.12'
     implementation 'com.android.support:support-annotations:27.1.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -94,5 +93,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'
     implementation 'com.shamanland:xdroid-toaster:0.2.4'
     implementation 'org.tensorflow:tensorflow-android:+'
-    implementation project(':openCVLibrary330')
+    implementation project(':openCVLibrary340dev')
 }

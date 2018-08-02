@@ -49,7 +49,7 @@ target_include_directories(tensorflow_detector PRIVATE
 
 add_custom_command(TARGET tensorflow_detector POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "/home/irina/FR_master/jniLibs"
+         "$ENV{OPENALPR_LIBS}"
         ${CMAKE_SOURCE_DIR}/src/main/jniLibs)
 
 target_link_libraries(tensorflow_detector

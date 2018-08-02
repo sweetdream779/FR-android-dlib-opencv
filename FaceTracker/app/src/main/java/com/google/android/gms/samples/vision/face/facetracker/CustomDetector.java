@@ -6,6 +6,7 @@ import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
@@ -81,6 +82,7 @@ public class CustomDetector extends Detector<Face> {
             Bitmap tmpBitmap = BitmapFactory.decodeByteArray(jpegArray, 0, jpegArray.length);
             final Bitmap cropped;
             Matrix rot = new Matrix();
+            //Log.d(TAG, String.format("rotation %d", frame.getMetadata().getRotation()));
             switch (frame.getMetadata().getRotation())
             {
                 case 1:

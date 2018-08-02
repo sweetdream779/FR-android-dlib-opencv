@@ -477,7 +477,7 @@ public class CameraActivityMainALPRus extends Activity
     mBtnSwitch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent myIntent = new Intent(CameraActivityMainALPRus.this, CameraActivityMainSPC.class);
+        Intent myIntent = new Intent(CameraActivityMainALPRus.this, FaceTrackerActivity.class);
         CameraActivityMainALPRus.this.startActivity(myIntent);
       }
     });

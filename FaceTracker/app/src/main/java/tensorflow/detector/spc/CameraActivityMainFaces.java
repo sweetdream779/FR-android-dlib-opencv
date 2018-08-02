@@ -147,7 +147,7 @@ public class CameraActivityMainFaces extends Activity
 
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-    setContentView(R.layout.activity_camera);
+    setContentView(R.layout.activity_camera_ssdfaces);
 
     mBtnSwitch = (Button) findViewById(R.id.btnSwitch);
 
@@ -458,7 +458,7 @@ public class CameraActivityMainFaces extends Activity
     mBtnSwitch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent myIntent = new Intent(CameraActivityMainFaces.this, FaceTrackerActivity.class);
+        Intent myIntent = new Intent(CameraActivityMainFaces.this, CameraActivityMainALPReu.class);
         CameraActivityMainFaces.this.startActivity(myIntent);
       }
     });
