@@ -75,7 +75,7 @@ public class CameraActivityMain extends Activity
 
   private static final boolean MAINTAIN_ASPECT = true;
   // Minimum detection confidence to track a detection.
-  private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.8f;
+  private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.6f;
 
   //private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
   private static Size DESIRED_PREVIEW_SIZE;
