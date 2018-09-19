@@ -43,6 +43,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.os.Trace;
+import android.util.DisplayMetrics;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -68,15 +69,16 @@ public class CameraActivityMain extends Activity
   private static final int TF_OD_API_INPUT_SIZE = 300;
   // Tensorflow Object Detection API frozen checkpoints
   private static final String TF_OD_API_MODEL_FILE =
-          "file:///android_asset/spc_mobilenet_v3_1x_0.52_cleaned.pb";
-  private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/spc_labels.txt";
+          "file:///android_asset/cp_hard_trained_mobilenet.pb";
+  private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/spc_labels_2.txt";
 
 
-  private static final boolean MAINTAIN_ASPECT = false;
+  private static final boolean MAINTAIN_ASPECT = true;
   // Minimum detection confidence to track a detection.
-  private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.6f;
+  private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.8f;
 
-  private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+  //private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+  private static Size DESIRED_PREVIEW_SIZE;
 
   private static final boolean SAVE_PREVIEW_BITMAP = false;
   private static final float TEXT_SIZE_DIP = 10;
@@ -129,6 +131,12 @@ public class CameraActivityMain extends Activity
   protected void onCreate(final Bundle savedInstanceState) {
     LOGGER.d("onCreate " + this);
     super.onCreate(null);
+
+    DisplayMetrics metrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    DESIRED_PREVIEW_SIZE = new Size(metrics.widthPixels, metrics.heightPixels);
+
+
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     setContentView(R.layout.activity_camera);
@@ -516,7 +524,7 @@ public class CameraActivityMain extends Activity
               getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE);
       cropSize = TF_OD_API_INPUT_SIZE;
     } catch (final IOException e) {
-      LOGGER.e("Exception initializing classifier!", e);
+      LOGGER.e("Exception initializing detector!" +  e);
       Toast toast =
               Toast.makeText(
                       getApplicationContext(), "Classifier could not be initialized", Toast.LENGTH_SHORT);

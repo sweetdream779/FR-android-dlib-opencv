@@ -17,7 +17,7 @@ limitations under the License.
 #define THIRD_PARTY_TENSORFLOW_EXAMPLES_ANDROID_JNI_OBJECT_TRACKING_TRACKED_OBJECT_H_
 
 #ifdef __RENDER_OPENGL__
-#include "tensorflow/examples/android/jni/object_tracking/gl_utils.h"
+#include "gl_utils.h"
 #endif
 #include "object_detector.h"
 
