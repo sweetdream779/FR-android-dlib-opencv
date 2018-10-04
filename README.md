@@ -44,5 +44,5 @@ export OPENCV_ANDROID_SDK=/Users/hoopoe/Tools/OpenCV-android-sdk
    d) copy "haarcascade_frontalface_default.xml" into "sdcard/Download"
    
 6. To run openalpr activities :
-  * download jniLibs from [this link](https://drive.google.com/open?id=13ZlJvIRBpxydJcm64tS_czQm3e0SBwVu). The folder contains precompiled libs for `ANDROID_PLATFORM="android-21"` and `ANDROID_ABI="armeabi-v7a", "arm64-v8a", "x86_64"`. For compling with another `ANDROID_PLATFORM` or `ANDROID_ABI` use [this script](https://gist.github.com/jav974/072425f14927e6ca2c7a4439d8ac5457).
+  * download jniLibs from [this link](https://drive.google.com/open?id=1gvV1jzcIQV6pj3c_K1iberPKX2qRyz3Y). The folder contains precompiled libs for `ANDROID_PLATFORM="android-21"` and `ANDROID_ABI="armeabi-v7a", "arm64-v8a", "x86_64"`. For compling with another `ANDROID_PLATFORM` or `ANDROID_ABI` use [this script](https://gist.github.com/jav974/072425f14927e6ca2c7a4439d8ac5457).
   * set env variable OPENALPR_LIBS
