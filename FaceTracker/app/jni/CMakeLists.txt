@@ -33,7 +33,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
                               -Wl,--allow-multiple-definition \
                               -Wl,--whole-archive -fPIE -v")
 
-file(GLOB_RECURSE tensorflow_detector_sources ${SAMPLE_SRC_DIR}/jni/*.*)
+file(GLOB_RECURSE tracker_sources ${SAMPLE_SRC_DIR}/jni/*.*)
 
 find_library( # Sets the name of the path variable.
               log-lib
@@ -42,17 +42,15 @@ find_library( # Sets the name of the path variable.
               # you want CMake to locate.
               log )
 
-add_library(tensorflow_detector SHARED
-            ${tensorflow_detector_sources})
-target_include_directories(tensorflow_detector PRIVATE
-                           ${CMAKE_SOURCE_DIR})
+add_library(tracker SHARED ${tracker_sources})
+target_include_directories(tracker PRIVATE ${CMAKE_SOURCE_DIR})
 
-add_custom_command(TARGET tensorflow_detector POST_BUILD
+add_custom_command(TARGET tracker POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
          "$ENV{OPENALPR_LIBS}"
         ${CMAKE_SOURCE_DIR}/src/main/jniLibs)
 
-target_link_libraries(tensorflow_detector
+target_link_libraries(tracker
                       android
                       log
                       jnigraphics

@@ -22,13 +22,13 @@
 
     <Button
         android:id="@+id/btnSwitch"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:background="@android:color/black"
         android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:drawableRight="@drawable/face_detection"/>
+        android:drawableRight="@drawable/eu"/>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -36,6 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000"
-        tools:context="tensorflow.detector.spc.CameraActivityMainALPRus" >
+        tools:context="com.android.lpr.CameraActivityMainALPRus" >
     </FrameLayout>
 </RelativeLayout>

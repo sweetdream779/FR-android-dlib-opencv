@@ -2,7 +2,7 @@ package com.openalpr.jni;
 
 import com.openalpr.jni.json.JSONException;
 
-import tensorflow.detector.spc.env.Logger;
+import com.android.lpr.env.Logger;
 
 public class Alpr {
     private static final Logger LOGGER = new Logger();

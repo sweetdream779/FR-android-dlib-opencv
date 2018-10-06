@@ -13,7 +13,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.google.android.gms.samples.vision.face.facetracker"
+        applicationId "com.android.lpr"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
@@ -28,7 +28,7 @@ android {
         signingConfig signingConfigs.config
 
         // Specifies the application ID for the test APK.
-        testApplicationId "org.opencv.android.facetracker"
+        // testApplicationId "com.android.lpr"
         // Specifies the fully-qualified class name of the test instrumentation runner.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -92,6 +92,6 @@ dependencies {
     implementation 'com.android.support:design:23.4.0'
     implementation 'com.google.android.gms:play-services-vision:9.4.0+'
     implementation 'com.shamanland:xdroid-toaster:0.2.4'
-    implementation 'org.tensorflow:tensorflow-android:+'
-    implementation project(':openCVLibrary340dev')
+    //implementation 'org.tensorflow:tensorflow-android:+'
+    //implementation project(':openCVLibrary340dev')
 }

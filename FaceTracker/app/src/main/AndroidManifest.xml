@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.gms.samples.vision.face.facetracker"
+    package="com.android.lpr"
     android:installLocation="auto"
     android:versionCode="1"
     android:versionName="1">
@@ -24,82 +24,15 @@
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:label="Face Recognition"
+        android:label="LPR"
         android:largeHeap="true"
         android:theme="@style/Theme.AppCompat">
         <meta-data
-            android:name="com.google.android.gms.version"
+            android:name="com.android.lpr.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="face" />
-
 
         <activity
-            android:name=".FaceTrackerActivity"
-            android:icon="@drawable/icon"
-            android:label="Face Recognition"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name="opencv.android.fdt.FdActivity"
-            android:label="OCV-SAMFDT"
-            android:screenOrientation="landscape"
-            android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="org.opencv.android.facetracker.OpenCvActivity"
-            android:icon="@drawable/icon"
-            android:label="OCV-FDT"
-            android:screenOrientation="landscape"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="tensorflow.detector.spc.CameraActivityMainFaces"
-            android:icon="@drawable/icon"
-            android:label="@string/app_name_faces"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="tensorflow.detector.spc.CameraActivityMainSPC"
-            android:icon="@drawable/icon"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="tensorflow.detector.spc.CameraActivityMainALPReu"
+            android:name=".CameraActivityMainALPReu"
             android:icon="@drawable/icon"
             android:label="@string/app_alpr_name_eu"
             android:theme="@style/AppTheme"
@@ -112,7 +45,7 @@
         </activity>
 
         <activity
-            android:name="tensorflow.detector.spc.CameraActivityMainALPRus"
+            android:name=".CameraActivityMainALPRus"
             android:icon="@drawable/icon"
             android:label="@string/app_alpr_name_us"
             android:theme="@style/AppTheme"

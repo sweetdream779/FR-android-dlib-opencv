@@ -31,7 +31,7 @@ limitations under the License.
 namespace tf_tracking {
 
 #define OBJECT_TRACKER_METHOD(METHOD_NAME) \
-  Java_tensorflow_detector_spc_tracking_ObjectTracker_##METHOD_NAME  // NOLINT
+  Java_com_android_lpr_tracking_ObjectTracker_##METHOD_NAME  // NOLINT
 
 JniLongField object_tracker_field("nativeObjectTracker");
 
